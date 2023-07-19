@@ -1,0 +1,49 @@
+import cv2
+import numpy as np
+
+def translate(image, x, y):
+    
+    dimensions = (image.shape[1], image.shape[0])
+    translation_matrix = np.float32([[1, 0, x], [0, 1, y]])
+    translated_image = cv2.warpAffine(image, translation_matrix, dimensions)
+    return translated_image
+
+
+image = cv2.imread("photos/cute.jpg")
+translated_image = translate(image, 100, 100)
+
+cv2.imshow("Original Image", image)
+cv2.imshow("Translated Image", translated_image)
+
+def rotate(image, angle):
+
+    rows, cols = image.shape[:2]
+    rotation_matrix = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
+    rotated_image = cv2.warpAffine(image, rotation_matrix, (cols, rows))
+    return rotated_image
+
+
+image = cv2.imread("photos/cute.jpg")
+rotated_image = rotate(image, 45)
+
+cv2.imshow("Rotated Image", rotated_image)
+
+
+def caned(image):
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (9, 9), 0)
+    cv2.imshow("Blurred",blurred)
+    edges = cv2.Canny(blurred, 100, 200)
+    return edges
+
+image = cv2.imread("photos/cute.jpg")
+edges = caned(image)
+
+contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+image_with_contours = image.copy()
+cv2.drawContours(image_with_contours, contours, -1, (0, 255, 0), 2)
+
+cv2.imshow("Canny Edges", edges)
+cv2.imshow("Contours", image_with_contours)
+cv2.waitKey(0)
