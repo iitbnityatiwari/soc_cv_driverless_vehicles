@@ -8,12 +8,8 @@ def translate(image, x, y):
     translated_image = cv2.warpAffine(image, translation_matrix, dimensions)
     return translated_image
 
-
 image = cv2.imread("photos/cute.jpg")
 translated_image = translate(image, 100, 100)
-
-cv2.imshow("Original Image", image)
-cv2.imshow("Translated Image", translated_image)
 
 def rotate(image, angle):
 
@@ -22,12 +18,11 @@ def rotate(image, angle):
     rotated_image = cv2.warpAffine(image, rotation_matrix, (cols, rows))
     return rotated_image
 
-
-image = cv2.imread("photos/cute.jpg")
 rotated_image = rotate(image, 45)
 
+cv2.imshow("Original Image", image)
+cv2.imshow("Translated Image", translated_image)
 cv2.imshow("Rotated Image", rotated_image)
-
 
 def caned(image):
 
@@ -37,7 +32,6 @@ def caned(image):
     edges = cv2.Canny(blurred, 100, 200)
     return edges
 
-image = cv2.imread("photos/cute.jpg")
 edges = caned(image)
 
 contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -46,4 +40,11 @@ cv2.drawContours(image_with_contours, contours, -1, (0, 255, 0), 2)
 
 cv2.imshow("Canny Edges", edges)
 cv2.imshow("Contours", image_with_contours)
+
+eroded = cv2.erode(image, (300,300), iterations=50)
+dilated = cv2.dilate(eroded,(300,300),iterations=50)
+
+cv2.imshow('Eroded', eroded)
+cv2.imshow('Dilated', dilated)
+
 cv2.waitKey(0)
